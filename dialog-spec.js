@@ -1,8 +1,13 @@
 describe("Tests for component that displays dialog", function() {
-    var element, compile, rootScope, mdDialog, material;
+    var element, compile, rootScope, mdDialog, material, rootElem;
 
     beforeEach(module('ngMaterial-mock'));
     beforeEach(module('test'));
+
+    beforeEach(module(function($provide) {
+        rootElem = angular.element("<div></div>")
+        $provide.value('$rootElement', rootElem);
+    }));
 
     beforeEach(inject(function(_$rootScope_, _$compile_, $mdDialog, _$material_) {
         compile = _$compile_;
@@ -11,6 +16,8 @@ describe("Tests for component that displays dialog", function() {
         material = _$material_;
 
         element = getCompiledElement();
+        angular.element(window.document.body).append(rootElem);
+        angular.element(rootElem).append(element);
     }));
 
     it("should open then close the dialog", function() {
@@ -20,17 +27,14 @@ describe("Tests for component that displays dialog", function() {
 
         expect(element.find('button').length).toEqual(1);
         element.find('button').triggerHandler('click');
-        
+
+        expect(rootElem.find('md-dialog').length).toEqual(1);
         expect(controller.dialogOpen).toBeTruthy();
 
-        rootScope.$apply();
+        rootElem.find('button').eq(2).triggerHandler('click');
+
         material.flushInterimElement();
 
-        element.find('button').eq(2).triggerHandler('click');
-
-        rootScope.$apply();
-        material.flushInterimElement();
-        
         expect(controller.dialogOpen).toBeFalsy();
     });
 
@@ -49,14 +53,13 @@ describe("Tests for component that displays dialog", function() {
             showDialog = false;
         });
 
-        rootScope.$apply();
         material.flushInterimElement();
 
         expect(showDialog).toBeTruthy();
+        expect(element.find('md-dialog').length).toEqual(1);
 
         element.find('button').eq(2).triggerHandler('click');
 
-        rootScope.$apply();
         material.flushInterimElement();
 
         expect(showDialog).toBeFalsy();
