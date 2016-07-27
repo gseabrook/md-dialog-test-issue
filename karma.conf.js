@@ -12,7 +12,8 @@ module.exports = function(config) {
             'angular/angular-animate.js',
 
             'app.js',
-            'dialog-spec.js'
+            'dialog-spec.js',
+            'select-spec.js'
         ],
 
         autoWatch: true,

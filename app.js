@@ -20,4 +20,17 @@ angular
                 });
             }
         }
+    })
+    .directive('selectTest', function() {
+        return {
+            restrict: 'A',
+            template: '<md-select ng-model="model" placeholder="Test"><md-option ng-repeat="opt in options">{{opt.name}}</md-option></md-select>',
+            link: function($scope) {
+                $scope.options = [{
+                    name: 'Download'
+                }, {
+                    name: 'Share'
+                }];
+            }
+        }
     });
